@@ -6,17 +6,11 @@
 /*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/19 14:35:08 by miltavar          #+#    #+#             */
-/*   Updated: 2025/08/19 16:51:39 by miltavar         ###   ########.fr       */
+/*   Updated: 2025/08/20 10:47:25 by miltavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
-
-void	match_think(t_philo *philo)
-{
-	print_action(philo, "is thinking");
-	smart_sleep(1000, philo);
-}
 
 void	clear_forks(t_philo *philo)
 {

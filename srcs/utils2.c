@@ -6,7 +6,7 @@
 /*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 13:42:56 by miltavar          #+#    #+#             */
-/*   Updated: 2025/08/19 18:00:53 by miltavar         ###   ########.fr       */
+/*   Updated: 2025/08/20 15:49:39 by miltavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ int	get_sim(int argc, char **argv, t_sim *sim)
 	return (1);
 }
 
-
 void	smart_sleep(long duration, t_philo *philo)
 {
 	long	start;
@@ -52,7 +51,7 @@ void	smart_sleep(long duration, t_philo *philo)
 			break ;
 		}
 		pthread_mutex_unlock(&philo->sim->meal_lock);
-		usleep(200);
+		usleep(100);
 	}
 }
 
@@ -86,15 +85,15 @@ void	*routine(void *arg)
 			break ;
 		if (lock_order(philo) == 1)
 			break ;
-		match_meal(philo);
 		if (check_flag(philo) == 1)
 			break ;
+		match_meal(philo);
 		if (check_flag(philo) == 1)
 			break ;
 		unlock_order(philo);
 		if (check_flag(philo) == 1)
 			break ;
-		match_think(philo);
+		print_action(philo, "is thinking");
 		if (check_flag(philo) == 1)
 			break ;
 	}
@@ -104,7 +103,7 @@ void	*routine(void *arg)
 
 int	threads(t_sim *sim)
 {
-	int	i;
+	int			i;
 	pthread_t	monit;
 
 	i = 0;
@@ -114,7 +113,7 @@ int	threads(t_sim *sim)
 		sim->philo[i].last_meal = get_time_in_ms();
 		if (pthread_create(&sim->philo[i].thread, NULL, &routine,
 				(void *)&sim->philo[i]) != 0)
-				return (printf("Failed to create thread\n"), -1);
+			return (printf("Failed to create thread\n"), -1);
 		i++;
 	}
 	if (start_monitoring(sim, &monit) == -1)

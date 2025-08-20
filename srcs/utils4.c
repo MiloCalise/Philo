@@ -6,25 +6,33 @@
 /*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 13:57:19 by miltavar          #+#    #+#             */
-/*   Updated: 2025/08/19 15:58:37 by miltavar         ###   ########.fr       */
+/*   Updated: 2025/08/20 15:53:54 by miltavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-int	check_death(t_sim *sim)
+int	check_death(t_sim *sim, int id)
 {
-	int	id;
-
 	id = 0;
 	while (id < sim->nb_philo)
 	{
 		pthread_mutex_lock(&sim->meal_lock);
 		if (get_time_in_ms() - sim->philo[id].last_meal > sim->time_to_die)
 		{
-			pthread_mutex_unlock(&sim->meal_lock);
-			print_action(&sim->philo[id], "has died");
-			return (1);
+			if (sim->nb_to_eat != 0)
+			{
+				if (sim->philo[id].meals_eaten != sim->nb_to_eat)
+				{
+					pthread_mutex_unlock(&sim->meal_lock);
+					return (print_action(&sim->philo[id], "has died"), 1);
+				}
+			}
+			else
+			{
+				pthread_mutex_unlock(&sim->meal_lock);
+				return (print_action(&sim->philo[id], "has died"), 1);
+			}
 		}
 		pthread_mutex_unlock(&sim->meal_lock);
 		id++;
@@ -83,6 +91,11 @@ int	stop_monitoring(pthread_t *monit)
 
 int	check_flag(t_philo *philo)
 {
+	if (check_eaten(philo) == 1)
+	{
+		clear_forks(philo);
+		return (1);
+	}
 	pthread_mutex_lock(&philo->sim->dead_lock);
 	if (philo->sim->dead_flag == 1)
 	{
@@ -91,10 +104,5 @@ int	check_flag(t_philo *philo)
 		return (1);
 	}
 	pthread_mutex_unlock(&philo->sim->dead_lock);
-	if (check_eaten(philo) == 1)
-	{
-		clear_forks(philo);
-		return (1);
-	}
 	return (0);
 }

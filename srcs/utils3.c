@@ -6,7 +6,7 @@
 /*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/07 11:30:52 by miltavar          #+#    #+#             */
-/*   Updated: 2025/08/19 17:35:01 by miltavar         ###   ########.fr       */
+/*   Updated: 2025/08/20 15:55:03 by miltavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ int	check_status(t_philo *philo)
 
 int	lock_order(t_philo *philo)
 {
-	if (check_eaten(philo) == 1)
-		return (1);
 	if (philo->id % 2 == 0)
 	{
 		if (normal_lock(philo) == 1)
@@ -76,17 +74,19 @@ void	unlock_order(t_philo *philo)
 void	*monitoring(void *arg)
 {
 	t_sim	*sim;
+	int		id;
 
+	id = 0;
 	sim = (t_sim *)arg;
 	while (1)
 	{
-		if (check_death(sim) == 1)
-			return (NULL);
 		if (sim->nb_to_eat != 0)
 		{
 			if (check_meals(sim) == 1)
 				return (NULL);
 		}
+		if (check_death(sim, id) == 1)
+			return (NULL);
 		usleep(1000);
 	}
 	return (NULL);
