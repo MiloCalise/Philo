@@ -6,7 +6,7 @@
 /*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/31 13:22:46 by miltavar          #+#    #+#             */
-/*   Updated: 2025/08/15 12:30:02 by miltavar         ###   ########.fr       */
+/*   Updated: 2025/08/21 10:43:24 by miltavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,8 @@ long	grab_time(char *s)
 		res = res * 10 + s[i] - 48;
 		i++;
 	}
-	if (res <= 0)
-		return (printf("Negative or null number\n"), -1);
+	if (res <= 59)
+		return (printf("Time has to be at least 60ms\n"), -1);
 	return (res);
 }
 
@@ -84,11 +84,9 @@ int	get_sim2(char **argv, t_sim *sim)
 	int	i;
 
 	sim->time_to_eat = grab_time(argv[3]);
-	if (sim->time_to_eat == -1)
-		return (printf("Parsing failed\n"), -1);
 	sim->time_to_sleep = grab_time(argv[4]);
-	if (sim->time_to_sleep == -1)
-		return (printf("Parsing failed\n"), -1);
+	if (sim->time_to_sleep == -1 || sim->time_to_eat == -1)
+		return (-1);
 	i = 0;
 	while (i < sim->nb_philo)
 		pthread_mutex_init(&sim->forks[i++], NULL);

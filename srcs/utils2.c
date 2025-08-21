@@ -6,7 +6,7 @@
 /*   By: miltavar <miltavar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 13:42:56 by miltavar          #+#    #+#             */
-/*   Updated: 2025/08/20 15:49:39 by miltavar         ###   ########.fr       */
+/*   Updated: 2025/08/21 10:42:28 by miltavar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ int	get_sim(int argc, char **argv, t_sim *sim)
 	sim->nb_philo = grab_philos(argv[1]);
 	sim->time_to_die = grab_time(argv[2]);
 	if (argc == 6)
-		sim->nb_to_eat = grab_time(argv[5]);
+		sim->nb_to_eat = grab_philos(argv[5]);
 	else
 		sim->nb_to_eat = 0;
 	sim->dead_flag = 0;
 	if (sim->nb_philo == -1 || sim->time_to_die == -1 || sim->nb_to_eat == -1)
-		return (printf("Parsing failed\n"), 0);
+		return (0);
 	sim->forks = malloc(sizeof(pthread_mutex_t) * sim->nb_philo);
 	if (!sim->forks)
 		return (printf("Malloc failed\n"), 0);
